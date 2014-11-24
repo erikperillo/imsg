@@ -293,9 +293,9 @@ else:
      img[:,:,0] = np.matrix(src).reshape(img.shape[0],img.shape[1])
      cv2.imwrite(output_fn,img,[cv2.IMWRITE_JPEG_QUALITY,100])
      if randkey:
-          saveKey("." + extension(output_fn,"key"),key)
-          if verbose or verbose2:
-               print "imsg: key saved as '","."+extension(output_fn,"key"),"'"
+          if keypath == "":
+               keypath = "." + extension(output_fn,"key")
+          saveKey(keypath,key)
      if verbose or verbose2:
           print "imsg: written message: '",readString(src,key),"'"
           print "imsg: result saved as '",output_fn,"'"

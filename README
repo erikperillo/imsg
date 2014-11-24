@@ -1,0 +1,14 @@
+imsg - hide and read messages in images - version 1.5
+by Erik Perillo
+
+this application requires the additional modules:
+-cv2
+-numpy
+
+Want to hide a message to a file? You can pass a message via command line or a file to a message. Use "imsg -h" for more information.
+
+It uses only the first plane of image. By default, message is written serially, but you can pass a key file in the format "a b c d...", with all letters being integers values and separated by spaces. You can also generate a random key and save it as you wish.
+
+Want to read a message? If message was written serially, you only need the image. If it was written using a key, the key file must be specified.
+
+Use it as you wish.
