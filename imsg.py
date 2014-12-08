@@ -3,7 +3,7 @@
 #imsg - read/write messages to/from images
 #by Erik Perillo
 
-VERSION = "1.5"
+VERSION = "1.5.1"
 
 import cv2
 import sys
@@ -117,12 +117,22 @@ def getExt(string):
      return ""
 
 #changes extension of filename
-def extension(string,ext):
+def setExt(string,ext):
+     ret = string
      for i in range(len(string)):
           if(string[i] == "."):
-               retstring = string[:(i+1)] + ext
-               return retstring
-     return string + "." + ext
+               ret = string[:i]
+     return ret + "." + ext
+
+#splits file into its path and filename
+def fileSplit(string):
+     directory = ""
+     flie = string
+     for i in range(len(string)):
+          if string[i] == "/":
+               directory = string[:i]
+               flie = string[(i+1):]
+     return directory,flie
 
 #checks if message fits into source array
 def pairCheck(src,string,key):
@@ -246,14 +256,14 @@ else:
 
 #checking output filename
 if output_fn == "":
-     output_fn = extension(input_fn,"png")
+     output_fn = setExt(input_fn,"png")
 else:
      if decrypt:
           error("invalid operation")
      if getExt(output_fn) != ".png":
           if not decrypt and not warnoff:
                print "imsg: warning: output image extension has been changed. it must be in .png"
-          output_fn = extension(output_fn,"png")
+          output_fn = setExt(output_fn,"png")
 
 #checking key things
 if randkey:
@@ -262,7 +272,8 @@ if randkey:
           print "imsg: generated random key: ",key
 else:
      if keypath == "":
-          key = getKey("." + extension(output_fn,"key"))
+          dri,flie = fileSplit(output_fn)
+          key = getKey(dri + "." + setExt(flie,"key"))
           if key is None:
                key = (0,)
      else:
@@ -294,7 +305,8 @@ else:
      cv2.imwrite(output_fn,img,[cv2.IMWRITE_JPEG_QUALITY,100])
      if randkey:
           if keypath == "":
-               keypath = "." + extension(output_fn,"key")
+               dri,flie = fileSplit(output_fn)
+               keypath = setExt(dri + "." + flie,"key")
           saveKey(keypath,key)
      if verbose or verbose2:
           print "imsg: written message: '",readString(src,key),"'"
